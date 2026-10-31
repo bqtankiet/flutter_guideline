@@ -1,5 +1,17 @@
 import 'package:flutter/material.dart';
 
+class GuidelineConfig {
+  // Grid configuration
+  static const double padding = 16.0;
+  static const double spacing = 16.0;
+  static const int columns = 4;
+
+  // Column size
+  static double calculateColumnWidth(double screenWidth) {
+    return (screenWidth - padding * 2 - spacing * (columns - 1)) / columns;
+  }
+}
+
 class GuidelineOverlay extends StatelessWidget {
   const GuidelineOverlay({super.key});
 
@@ -41,11 +53,9 @@ class GuidelinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    const double padding = 16.0;
-    const double spacing = 16.0;
-
-    final double contentWidth = size.width - padding * 2;
-    final double columnWidth = (contentWidth - spacing * 3) / 4;
+    final double contentWidth = size.width - GuidelineConfig.padding * 2;
+    final double columnWidth = (contentWidth - GuidelineConfig.spacing * 3) / 4;
+    final double middleY = size.height / 2;
 
     final borderPaint = Paint()
       ..color = Colors.red
@@ -54,7 +64,19 @@ class GuidelinePainter extends CustomPainter {
 
     // Khung chữ nhật bên ngoài
     canvas.drawRect(
-      Rect.fromLTRB(padding, 0, size.width - padding, size.height),
+      Rect.fromLTRB(
+        GuidelineConfig.padding,
+        0,
+        size.width - GuidelineConfig.padding,
+        size.height,
+      ),
+      borderPaint,
+    );
+
+    // Đường kẻ chia đôi màn hình theo chiều ngang
+    canvas.drawLine(
+      Offset(0, middleY),
+      Offset(size.width, middleY),
       borderPaint,
     );
 
@@ -63,8 +85,9 @@ class GuidelinePainter extends CustomPainter {
       ..color = Colors.red.withValues(alpha: 0.12)
       ..style = PaintingStyle.fill;
 
-    for (int i = 0; i < 4; i++) {
-      final double left = padding + i * (columnWidth + spacing);
+    for (int i = 0; i < GuidelineConfig.columns; i++) {
+      final double left =
+          GuidelineConfig.padding + i * (columnWidth + GuidelineConfig.spacing);
 
       canvas.drawRect(
         Rect.fromLTWH(left, 0, columnWidth, size.height),
