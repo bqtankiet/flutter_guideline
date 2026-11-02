@@ -4,6 +4,7 @@ class GuidelineConfig {
   // Grid configuration
   static const double padding = 16.0;
   static const double spacing = 16.0;
+  static const double appBarHeight = 56.0;
   static const int columns = 4;
 
   // Column size
